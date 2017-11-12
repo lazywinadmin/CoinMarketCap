@@ -139,6 +139,103 @@ function Get-CoinGlobal {
     }
 }
 
+function Get-CoinHistory {
+    <#
+.SYNOPSIS
+    Retrieve history information on 
+.DESCRIPTION
+    Retrieve one or multiple Cryprocurrencies information 
+.PARAMETER CoinID
+    Specify the Cryptocurrency you want to retrieve.
+    Default is Bitcoin
+.PARAMETER Begin
+    Specify the beginning of the range
+.PARAMETER End
+    Specify the end of the range
+.EXAMPLE
+    Get-CoinHistory -Begin '20170101' -end '20171101'
+.EXAMPLE
+    Get-CoinHistory -Begin '20170102' -End '20171001' -CoinId ethereum
+.NOTES
+    https://github.com/lazywinadmin/CoinMarketCap
+
+#>
+    [CmdletBinding()]
+    PARAM(
+        [Alias('Id')]
+        $CoinId = 'bitcoin',
+
+        [parameter(Mandatory = $true)]
+        $Begin,
+
+        [parameter(Mandatory = $true)]
+        $End
+    )
+
+    TRY {
+        $FunctionName = $MyInvocation.MyCommand
+
+        Write-Verbose -Message "[$FunctionName] Build Splatting"
+        $Splat = @{
+            Uri = "https://coinmarketcap.com/currencies/$Coinid/historical-data/?start=$Begin&end=$End"
+        }
+
+        # Helper function
+        # Source: Lee Holmes - http://www.leeholmes.com/blog/2015/01/05/extracting-tables-from-powershells-invoke-webrequest/
+        function Get-HTMLTable {
+            param(
+                [Parameter(Mandatory = $true)]
+                [Microsoft.PowerShell.Commands.HtmlWebResponseObject]
+                $WebRequest,
+
+                [Parameter(Mandatory = $true)]
+                [int] $TableNumber)
+
+            ## Extract the tables out of the web request
+            $tables = @($WebRequest.ParsedHtml.getElementsByTagName("TABLE"))
+            $table = $tables[$TableNumber]
+            $titles = @()
+            $rows = @($table.Rows)
+            ## Go through all of the rows in the table
+            foreach ($row in $rows) {
+                $cells = @($row.Cells)
+                ## If we've found a table header, remember its titles
+                if ($cells[0].tagName -eq "TH") {
+                    $titles = @($cells | % { ("" + $_.InnerText).Trim() })
+                    continue
+
+                }
+                ## If we haven't found any table headers, make up names "P1", "P2", etc.
+                if (-not $titles) {
+                    $titles = @(1..($cells.Count + 2) | % { "P$_" })
+                }
+                ## Now go through the cells in the the row. For each, try to find the
+                ## title that represents that column and create a hashtable mapping those
+                ## titles to content
+
+                $resultObject = [Ordered] @{}
+                for ($counter = 0; $counter -lt $cells.Count; $counter++) {
+                    $title = $titles[$counter]
+                    if (-not $title) { continue }
+
+                    $resultObject[$title] = ("" + $cells[$counter].InnerText).Trim()
+                }
+                ## And finally cast that hashtable to a PSCustomObject
+                [PSCustomObject] $resultObject
+            }
+        }
+
+        
+        Write-Verbose -Message "[$FunctionName] Retrieving table..."
+        $WebRequest = Invoke-WebRequest @Splat
+        Get-HTMLTable -WebRequest $WebRequest -TableNumber 0
+    }
+    CATCH {
+        $PSCmdlet.ThrowTerminatingError($_)
+    }
+}
+
+
 # Export only the functions using PowerShell standard verb-noun naming.
 # Be sure to list each exported functions in the FunctionsToExport field of the module manifest file.
 # This improves performance of command discovery in PowerShell.

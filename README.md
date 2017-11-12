@@ -19,6 +19,22 @@ If you appreciate my work, you can donate BTC (Bitcoin) at the following address
 Install-Module -Name CoinMarketCap
 ```
 
+## Version History
+
+* 0.0.1
+  * Initial commit
+
+```text
+CommandType Name           Version Source
+----------- ----           ------- ------
+Function    Get-Coin       0.0.1   CoinMarketCap
+Function    Get-CoinGlobal 0.0.1   CoinMarketCap
+Function    Get-CoinID     0.0.1   CoinMarketCap
+```
+
+* 0.0.2
+  * Add `Get-CoinHistory` to retrieve historical data between two dates (format 'yyyyMMdd') for the specified currency (default = 'bitcoin'). You can retrieve all the currency available using `Get-CoinID`
+
 ## Usage
 
 ### Get Bitcoin information
@@ -172,4 +188,100 @@ active_currencies                : 900
 active_assets                    : 372
 active_markets                   : 6513
 last_updated                     : 1510520660
+```
+
+### Get the Historical data of a currency
+
+```powershell
+Get-CoinHistory -Begin '20171101' -End '20171111' -CoinId ethereum
+```
+
+```text
+Date       : Nov 11, 2017
+Open       : 298.59
+High       : 319.45
+Low        : 298.19
+Close      : 314.68
+Volume     : 842,301,000
+Market Cap : 28,559,400,000
+
+Date       : Nov 10, 2017
+Open       : 320.67
+High       : 324.72
+Low        : 294.54
+Close      : 299.25
+Volume     : 885,986,000
+Market Cap : 30,665,200,000
+
+Date       : Nov 09, 2017
+Open       : 308.64
+High       : 329.45
+Low        : 307.06
+Close      : 320.88
+Volume     : 893,250,000
+Market Cap : 29,509,000,000
+
+Date       : Nov 08, 2017
+Open       : 294.27
+High       : 318.70
+Low        : 293.10
+Close      : 309.07
+Volume     : 967,956,000
+Market Cap : 28,128,700,000
+
+Date       : Nov 07, 2017
+Open       : 298.57
+High       : 304.84
+Low        : 290.77
+Close      : 294.66
+Volume     : 540,766,000
+Market Cap : 28,533,300,000
+
+Date       : Nov 06, 2017
+Open       : 296.43
+High       : 305.42
+Low        : 293.72
+Close      : 298.89
+Volume     : 579,359,000
+Market Cap : 28,322,700,000
+
+Date       : Nov 05, 2017
+Open       : 300.04
+High       : 301.37
+Low        : 295.12
+Close      : 296.26
+Volume     : 337,658,000
+Market Cap : 28,661,500,000
+
+Date       : Nov 04, 2017
+Open       : 305.48
+High       : 305.48
+Low        : 295.80
+Close      : 300.47
+Volume     : 416,479,000
+Market Cap : 29,175,300,000
+
+Date       : Nov 03, 2017
+Open       : 288.50
+High       : 308.31
+Low        : 287.69
+Close      : 305.71
+Volume     : 646,340,000
+Market Cap : 27,547,400,000
+
+Date       : Nov 02, 2017
+Open       : 290.73
+High       : 293.91
+Low        : 281.17
+Close      : 287.43
+Volume     : 904,901,000
+Market Cap : 27,754,200,000
+
+Date       : Nov 01, 2017
+Open       : 305.76
+High       : 306.40
+Low        : 290.58
+Close      : 291.69
+Volume     : 553,864,000
+Market Cap : 29,183,600,000
 ```
