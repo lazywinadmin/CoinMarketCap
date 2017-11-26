@@ -16,9 +16,14 @@ function Get-Coin {
     Get-Coin -convert EUR
 .EXAMPLE
     Get-Coin -id bitcoin -convert EUR
+.EXAMPLE
+    Get-Coin -id btc
+.EXAMPLE
+    Get-Coin -id btc -convert eur
+.EXAMPLE
+    Coin btc
 .NOTES
     https://github.com/lazywinadmin/CoinMarketCap
-
 #>
     [CmdletBinding()]
     PARAM(
@@ -58,9 +63,21 @@ function Get-Coin {
             Write-Verbose -Message "[$FunctionName] Uri '$($Splat.Uri)'"
         }
 
-
-        Write-Verbose -Message "[$FunctionName] Querying API..."
-        [pscustomobject](invoke-restmethod @splat)
+        try{
+            Write-Verbose -Message "[$FunctionName] Querying API..."
+            [pscustomobject](invoke-restmethod @splat -ErrorAction Continue -ErrorVariable Result)
+        }
+        catch{
+            if ($_ -match 'id not found'){
+                Write-Verbose -Message "[$FunctionName] did not find the CoinID '$CoinId', looking up for Symbol '$CoinId'..."
+                if($Convert)
+                {
+                    Get-Coin -Convert $Convert | Where-Object {$_.Symbol -eq $CoinId}
+                }
+                else {Get-Coin| Where-Object {$_.Symbol -eq $CoinId}}
+            }
+            else {throw $_}
+        }
     }
     CATCH {
         $PSCmdlet.ThrowTerminatingError($_)
