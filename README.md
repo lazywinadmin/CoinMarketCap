@@ -35,12 +35,21 @@ Function    Get-CoinID     0.0.1   CoinMarketCap
 * 0.0.2
   * Add `Get-CoinHistory` to retrieve historical data between two dates (format 'yyyyMMdd') for the specified currency (default = 'bitcoin'). You can retrieve all the currency available using `Get-CoinID`
 
+* 1.0.0
+  * Get-Coin now accepts symbols. For example: You can do `Get-Coin BTC`.
+
 ## Usage
 
 ### Get Bitcoin information
 
 ```powershell
 Get-Coin -CoinId bitcoin
+```
+
+or
+
+```powershell
+Coin btc
 ```
 
 output:
