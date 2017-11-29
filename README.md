@@ -1,6 +1,6 @@
 # CoinMarketCap
 
-CoinMarketCap is an MIT licensed PowerShell module providing an easy to use wrapper around the coinmarketcap API.
+CoinMarketCap is an MIT licensed PowerShell module providing an easy to use wrapper around the [coinmarketcap API](https://coinmarketcap.com/api/).
 
 Please note that all results are cached for 120 seconds.
 
@@ -10,7 +10,7 @@ Contributions are welcome via pull requests and issues.
 
 ## Buy me a beer / Donate
 
-If you appreciate my work, you can donate BTC (Bitcoin) at the following address `1AQLLscs9rMfEkuHYfWzv6HTpeiJH3Swq1`
+BTC (Bitcoin) `1AQLLscs9rMfEkuHYfWzv6HTpeiJH3Swq1`
 
 ## Installation
 
@@ -37,6 +37,9 @@ Function    Get-CoinID     0.0.1   CoinMarketCap
 
 * 1.0.0
   * `Get-Coin` now accepts symbols. For example: You can do `Get-Coin BTC`.
+
+* 1.0.1
+  * `Get-Coin` new parameter `-Online` to show the CoinMarketCap page for a specified CoinID
 
 ## Usage
 
